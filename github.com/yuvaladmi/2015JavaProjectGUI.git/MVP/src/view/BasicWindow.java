@@ -13,9 +13,9 @@ public abstract class BasicWindow implements Runnable {
 	protected Display display;
 	protected Shell shell;
 
-	protected Menu menuBar, fileMenu, helpMenu;
-	protected MenuItem fileMenuHeader, helpMenuHeader;
-	protected MenuItem fileExitItem, fileSaveItem, helpGetHelpItem,fileLoadItem;
+	protected Menu menuBar, fileMenu, helpMenu, gameMenu;
+	protected MenuItem fileMenuHeader, helpMenuHeader,gameMenuHeader;
+	protected MenuItem fileExitItem, fileSaveItem, helpGetHelpItem,fileLoadItem,gameGenerateItem,gameSolveItem;
 
 	protected Label label;
 	protected KeyListener key;

@@ -3,6 +3,8 @@ package view;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -25,11 +27,20 @@ public class MazeWindow extends BasicWindow {
 	protected ArrayList<Maze3dViewDisplayer> mazeWidgetDisplayer;
 	Button startButton;
 	Button solveButton;
+	Button upButton;
+	Button downButton;
+	Button leftButton;
+	Button rightButton;
 
 	public MazeWindow(String title, int width, int height) {
 		super(title, width, height);
-		startButton = new Button(shell, SWT.PUSH);
-		solveButton = new Button(shell, SWT.PUSH);
+		// startButton = new Button(shell, SWT.PUSH);
+		// solveButton = new Button(shell, SWT.PUSH);
+		upButton = new Button(shell, 0);
+//		downButton = new Button(shell, SWT.ARROW | SWT.DOWN);
+//		leftButton = new Button(shell, SWT.ARROW | SWT.LEFT);
+//		rightButton = new Button(shell, SWT.ARROW | SWT.RIGHT);
+
 		this.mazeWidgetDisplayer = new ArrayList<Maze3dViewDisplayer>();
 		widgetRefresh();
 	}
@@ -67,7 +78,7 @@ public class MazeWindow extends BasicWindow {
 
 	@Override
 	public void initWidgets() {
-		shell.setLayout(new GridLayout(2, false));
+		shell.setLayout(new GridLayout(3, false));
 
 		menuBar = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menuBar);
@@ -79,12 +90,22 @@ public class MazeWindow extends BasicWindow {
 
 		fileSaveItem = new MenuItem(fileMenu, SWT.PUSH);
 		fileSaveItem.setText("&Save");
-		
+
 		fileLoadItem = new MenuItem(fileMenu, SWT.PUSH);
 		fileLoadItem.setText("&Load");
 
 		fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
 		fileExitItem.setText("&Exit");
+
+		gameMenu = new Menu(shell, SWT.DROP_DOWN);
+		gameMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
+		gameMenuHeader.setText("&Game");
+		gameMenuHeader.setMenu(gameMenu);
+		gameGenerateItem = new MenuItem(gameMenu, SWT.PUSH);
+		gameGenerateItem.setText("&Generate");
+
+		gameSolveItem = new MenuItem(gameMenu, SWT.PUSH);
+		gameSolveItem.setText("&Solve");
 
 		helpMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
 		helpMenuHeader.setText("&Help");
@@ -96,48 +117,22 @@ public class MazeWindow extends BasicWindow {
 		helpGetHelpItem.setText("&Get Help");
 
 		fileExitItem.addSelectionListener(exitListener);
-		fileSaveItem.addSelectionListener(new SelectionListener() {
+		gameGenerateItem.addSelectionListener(generateListener);
+		gameSolveItem.addSelectionListener(solveListener);
 
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				label.setText("Saved");
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				label.setText("Saved");
+		shell.addListener(SWT.Close, new Listener() {
+			public void handleEvent(Event event) {
+				event.doit = true;
 			}
 		});
-		helpGetHelpItem.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				label.setText("No worries!");
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				label.setText("No worries!");
-			}
-		});
-
-		// shell.addListener(SWT.Close, new Listener() {
-		// public void handleEvent(Event event) {
-		// event.doit = true;
-		// }
-		// });
-		startButton.setText("Start");
-		startButton.setLayoutData(new GridData(SWT.FILL, SWT.None, false, false, 1, 1));
-		startButton.addSelectionListener(generateListener);
-		Maze3dViewDisplayer maze = new Maze3D(shell, SWT.BORDER);
+		
+		Maze3dViewDisplayer maze = new Maze3D(shell, SWT.BORDER,'x');
 		maze.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		this.mazeWidgetDisplayer.add(maze);
-
-		solveButton.setText("Solve");
-		solveButton.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false, 1, 1));
-		solveButton.addSelectionListener(solveListener);
-		solveButton.setEnabled(true);
-
+		
+		upButton.addKeyListener(key);
+		
+		
 	}
 
 	public void setCharacterPosition(int x, int y, int z) {

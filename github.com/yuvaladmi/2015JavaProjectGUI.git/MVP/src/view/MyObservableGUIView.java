@@ -1,6 +1,7 @@
 package view;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -18,7 +19,7 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				setChanged();
-				notifyObservers(("generate 3d maze myMaze 31 31 31").split(" "));
+				notifyObservers(("generate 3d maze myMaze 3 3 3").split(" "));
 			}
 
 			@Override
@@ -87,44 +88,43 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 
 			}
 		});
-		window.setKey(new KeyListener() {
-
+		
+		window.setKey(new KeyAdapter()  {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
-				// TODO Auto-generated method stub
 
-			}
-
-			@Override
-			public void keyReleased(KeyEvent arg0) {
 				switch (arg0.keyCode) {
 				case SWT.ARROW_UP:
 					setChanged();
-					notifyObservers("move UP myMaze");
+					notifyObservers(("move BACKWARD myMaze").split(" "));
+					System.out.println("BACKWARD");
 					break;
 				case SWT.ARROW_DOWN:
 					setChanged();
-					notifyObservers("move DOWN myMaze");
+					notifyObservers(("move FORWARD myMaze").split(" "));
+					System.out.println("FORWARD");
 					break;
 				case SWT.ARROW_RIGHT:
 					setChanged();
-					notifyObservers("move RIGHT myMaze");
+					notifyObservers(("move RIGHT myMaze").split(" "));
+					System.out.println("RIGHT");
 					break;
 				case SWT.ARROW_LEFT:
 					setChanged();
-					notifyObservers("move LEFT myMaze");
+					notifyObservers(("move LEFT myMaze").split(" "));
+					System.out.println("LEFT");
 					break;
 				case SWT.PAGE_UP:
 					setChanged();
-					notifyObservers("move FORWARD myMaze");
+					notifyObservers(("move UP myMaze").split(" "));
+					System.out.println("UP");
 					break;
 				case SWT.PAGE_DOWN:
 					setChanged();
-					notifyObservers("move BACKWARD myMaze");
+					notifyObservers(("move DOWN myMaze").split(" "));
+					System.out.println("DOWN");
 					break;
-
 				}
-
 			}
 		});
 	}

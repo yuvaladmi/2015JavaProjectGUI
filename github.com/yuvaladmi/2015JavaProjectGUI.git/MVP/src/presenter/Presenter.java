@@ -122,7 +122,7 @@ public class Presenter implements Observer {
 				case "BACKWARD":
 					m.moveBackward(arr[2]);
 					break;
-				case "FOREWARD":
+				case "FORWARD":
 					m.moveForward(arr[2]);
 					break;
 
@@ -161,6 +161,7 @@ public class Presenter implements Observer {
 						command.doCommand(("display solution " + temp[1]).split(" "));
 						break;
 					case "move":
+						v.displayMaze(m.sendGame("m"));
 						v.displayPosition(m.getHPosition(temp[1]));
 						break;
 
