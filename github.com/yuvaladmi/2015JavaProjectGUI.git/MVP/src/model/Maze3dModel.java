@@ -34,16 +34,20 @@ import algorithms.search.SearchableMaze;
 import algorithms.search.Solution;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
+import presenter.Properties;
 
 public class Maze3dModel extends abstractModel {
 
-	public Maze3dModel() {
+	protected Properties properties;
+	
+	public Maze3dModel(Properties properties) {
 		hMaze = new HashMap<String, Maze3d>();
 		hSol = new HashMap<Maze3d, Solution<Position>>();
 		hPosition = new HashMap<String, Position>();
 		sb = new StringBuilder();
 		numOfThread = 10;
 		threadpool = Executors.newFixedThreadPool(numOfThread);
+		this.properties = properties;
 		loadZip();
 	}
 
@@ -57,10 +61,11 @@ public class Maze3dModel extends abstractModel {
 	 */
 	@Override
 	public void generateMaze(String[] arr) {
-		int z = Integer.parseInt(arr[arr.length - 1]);
-		int y = Integer.parseInt(arr[arr.length - 2]);
-		int x = Integer.parseInt(arr[arr.length - 3]);
-		String name = arr[arr.length - 4];
+		int x = properties.getSizeX();
+		int y = properties.getSizeY();
+		int z = properties.getSizeZ();
+		String name = properties.getName();
+		
 		Future<Maze3d> fCallMaze = threadpool.submit(new Callable<Maze3d>() {
 
 			@Override
@@ -86,8 +91,9 @@ public class Maze3dModel extends abstractModel {
 	 * This method gets a Maze name and sends the Controller this maze.
 	 */
 	@Override
-	public Maze3d sendGame(String arr) {
-		Maze3d temp = hMaze.get(arr);
+	public Maze3d sendGame() {
+		String name = properties.getName();
+		Maze3d temp = hMaze.get(name);
 		return temp;
 	}
 
@@ -199,12 +205,8 @@ public class Maze3dModel extends abstractModel {
 	 */
 	@Override
 	public void solve(String[] arr) {
-		String nameAlg = arr[arr.length - 1];
-		sb = new StringBuilder();
-		for (int i = 1; i < arr.length - 1; i++) {
-			sb.append(arr[i]);
-		}
-		String name = sb.toString();
+		String nameAlg = properties.getSolvingAlgo();
+		String name = properties.getName();
 		Maze3d tempMaze = hMaze.get(name);
 		if ((hSol.get(tempMaze)) != null) {
 			setChanged();
@@ -250,18 +252,15 @@ public class Maze3dModel extends abstractModel {
 	 * This method gets a name of a maze and sends the Controller its solution
 	 */
 	@Override
-	public String bringSolution(String arr) {
+	public Solution<Position> bringSolution(String arr) {
 		Maze3d maze = hMaze.get(arr);
 		// Solution<Position> s = hSol.get(maze);
 		if (maze != null) {
-			Stack<Position> sol = hSol.get(maze).getSolution();
-			sb = new StringBuilder();
-			while (!sol.isEmpty()) {
-				sb.append(sol.pop());
-			}
-			return sb.toString();
+			Solution<Position> sol = hSol.get(maze);
+			return sol;
 		}
-		return "Solution do not exist for " + arr + " maze.";
+		notifyObservers("Solution do not exist for " + arr + " maze.");
+		return null;
 	}
 
 	/**
@@ -361,7 +360,8 @@ public class Maze3dModel extends abstractModel {
 	}
 
 	@Override
-	public void moveUp(String name) {
+	public void moveUp() {
+		String name = properties.getName();
 		Position currentPosition = hPosition.get(name);
 		Maze3d currentMaze = hMaze.get(name);
 		ArrayList<String> moves = currentMaze.getPossibleMoves(currentPosition);
@@ -377,7 +377,8 @@ public class Maze3dModel extends abstractModel {
 	}
 
 	@Override
-	public void moveDown(String name) {
+	public void moveDown() {
+		String name = properties.getName();
 		Position currentPosition = hPosition.get(name);
 		Maze3d currentMaze = hMaze.get(name);
 		ArrayList<String> moves = currentMaze.getPossibleMoves(currentPosition);
@@ -393,13 +394,14 @@ public class Maze3dModel extends abstractModel {
 	}
 
 	@Override
-	public void moveLeft(String name) {
+	public void moveLeft() {
+		String name = properties.getName();
 		Position currentPosition = hPosition.get(name);
 		Maze3d currentMaze = hMaze.get(name);
 		ArrayList<String> moves = currentMaze.getPossibleMoves(currentPosition);
 		for (String move : moves) {
 			if (move == "left") {
-				currentPosition.setX(currentPosition.getZ() - 1);
+				currentPosition.setZ(currentPosition.getZ() - 1);
 				hPosition.put(name, currentPosition);
 				setChanged();
 				notifyObservers(("move " + name).split(" "));
@@ -408,13 +410,14 @@ public class Maze3dModel extends abstractModel {
 	}
 
 	@Override
-	public void moveRight(String name) {
+	public void moveRight() {
+		String name = properties.getName();
 		Position currentPosition = hPosition.get(name);
 		Maze3d currentMaze = hMaze.get(name);
 		ArrayList<String> moves = currentMaze.getPossibleMoves(currentPosition);
 		for (String move : moves) {
 			if (move == "right") {
-				currentPosition.setX(currentPosition.getZ() + 1);
+				currentPosition.setZ(currentPosition.getZ() + 1);
 				hPosition.put(name, currentPosition);
 				setChanged();
 				notifyObservers(("move " + name).split(" "));
@@ -423,13 +426,14 @@ public class Maze3dModel extends abstractModel {
 	}
 
 	@Override
-	public void moveBackward(String name) {
+	public void moveBackward() {
+		String name = properties.getName();
 		Position currentPosition = hPosition.get(name);
 		Maze3d currentMaze = hMaze.get(name);
 		ArrayList<String> moves = currentMaze.getPossibleMoves(currentPosition);
 		for (String move : moves) {
 			if (move == "backward") {
-				currentPosition.setX(currentPosition.getY() - 1);
+				currentPosition.setY(currentPosition.getY() - 1);
 				hPosition.put(name, currentPosition);
 				setChanged();
 				notifyObservers(("move " + name).split(" "));
@@ -439,13 +443,14 @@ public class Maze3dModel extends abstractModel {
 	}
 
 	@Override
-	public void moveForward(String name) {
+	public void moveForward() {
+		String name = properties.getName();
 		Position currentPosition = hPosition.get(name);
 		Maze3d currentMaze = hMaze.get(name);
 		ArrayList<String> moves = currentMaze.getPossibleMoves(currentPosition);
 		for (String move : moves) {
 			if (move == "forward") {
-				currentPosition.setX(currentPosition.getY() + 1);
+				currentPosition.setY(currentPosition.getY() + 1);
 				hPosition.put(name, currentPosition);
 				setChanged();
 				notifyObservers(("move " + name).split(" "));

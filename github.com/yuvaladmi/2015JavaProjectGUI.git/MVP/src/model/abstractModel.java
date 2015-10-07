@@ -21,7 +21,7 @@ public abstract class abstractModel extends Observable implements Model {
 
 	public abstract void generateMaze(String[] arr);
 
-	public abstract Maze3d sendGame(String arr);
+	public abstract Maze3d sendGame();
 
 	public abstract int[][] crossSection(String[] arr);
 
@@ -35,7 +35,7 @@ public abstract class abstractModel extends Observable implements Model {
 
 	public abstract void solve(String[] arr);
 
-	public abstract String bringSolution(String arr);
+	public abstract Solution<Position> bringSolution(String arr);
 
 	public abstract void gameSize(String[] arr);
 
@@ -43,17 +43,17 @@ public abstract class abstractModel extends Observable implements Model {
 
 	public abstract void close();
 
-	public abstract void moveUp(String name);
+	public abstract void moveUp();
 
-	public abstract void moveDown(String name);
+	public abstract void moveDown();
 
-	public abstract void moveLeft(String name);
+	public abstract void moveLeft();
 
-	public abstract void moveRight(String name);
+	public abstract void moveRight();
 
-	public abstract void moveBackward(String name);
+	public abstract void moveBackward();
 
-	public abstract void moveForward(String name);
+	public abstract void moveForward();
 
 	public abstract Position getHPosition(String name);
 }

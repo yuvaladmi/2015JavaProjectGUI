@@ -2,13 +2,14 @@ package model;
 
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
+import algorithms.search.Solution;
 
 public interface Model {
     public void dirToPath(String[] arr);
 
     public void generateMaze(String[] arr);
 
-    public Maze3d sendGame(String arr);
+    public Maze3d sendGame();
 
     public int[][] crossSection(String[] arr);
 
@@ -22,7 +23,7 @@ public interface Model {
 
     public void solve(String[] arr);
 
-    public String bringSolution(String arr);
+    public Solution<Position> bringSolution(String arr);
 
     public void gameSize(String[] arr);
 
@@ -30,17 +31,17 @@ public interface Model {
 
     public void close();
     
-	public void moveUp(String name);
+	public void moveUp();
 
-	public void moveDown(String name);
+	public void moveDown();
 
-	public void moveLeft(String name);
+	public void moveLeft();
 
-	public void moveRight(String name);
+	public void moveRight();
 
-	public void moveBackward(String name);
+	public void moveBackward();
 
-	public void moveForward(String name);
+	public void moveForward();
 
 	public Position getHPosition(String name);
    

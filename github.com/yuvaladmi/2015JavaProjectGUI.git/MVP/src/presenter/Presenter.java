@@ -39,10 +39,10 @@ public class Presenter implements Observer {
 					v.displayInt(m.crossSection(arr));
 					break;
 				case "solution":
-					v.displayString(m.bringSolution(arr[arr.length - 1]));
+					v.displaySolution(m.bringSolution(arr[arr.length - 1]));
 					break;
 				default:
-					Maze3d maze = m.sendGame(arr[arr.length - 1]);
+					Maze3d maze = m.sendGame();
 					v.displayMaze(maze);
 					v.displayPosition(maze.getStart());
 					break;
@@ -108,22 +108,22 @@ public class Presenter implements Observer {
 			public void doCommand(String[] arr) {
 				switch (arr[1]) {
 				case "UP":
-					m.moveUp(arr[2]);
+					m.moveUp();
 					break;
 				case "DOWN":
-					m.moveDown(arr[2]);
+					m.moveDown();
 					break;
 				case "LEFT":
-					m.moveLeft(arr[2]);
+					m.moveLeft();
 					break;
 				case "RIGHT":
-					m.moveRight(arr[2]);
+					m.moveRight();
 					break;
 				case "BACKWARD":
-					m.moveBackward(arr[2]);
+					m.moveBackward();
 					break;
 				case "FORWARD":
-					m.moveForward(arr[2]);
+					m.moveForward();
 					break;
 
 				default:
@@ -161,7 +161,7 @@ public class Presenter implements Observer {
 						command.doCommand(("display solution " + temp[1]).split(" "));
 						break;
 					case "move":
-						v.displayMaze(m.sendGame("m"));
+						v.displayMaze(m.sendGame());
 						v.displayPosition(m.getHPosition(temp[1]));
 						break;
 

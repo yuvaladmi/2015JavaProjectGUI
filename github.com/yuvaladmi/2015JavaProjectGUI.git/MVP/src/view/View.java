@@ -2,6 +2,7 @@ package view;
 
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
+import algorithms.search.Solution;
 
 public interface View {
 	public void start();
@@ -19,5 +20,7 @@ public interface View {
 	public void displayMaze(Maze3d sendGame);
 
 	public void displayPosition(Position p);
+	
+	public void displaySolution(Solution<Position> s);
 
 }

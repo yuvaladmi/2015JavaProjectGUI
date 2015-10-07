@@ -6,12 +6,18 @@ public class Properties implements Serializable {
 
 	String name;
 	String solvingAlgo;
+	String viewStyle;
 	int numOfThreads;
 	int sizeX;
 	int sizeY;
 	int sizeZ;
-	int dimensions;
 	
+	public String getViewStyle() {
+		return viewStyle;
+	}
+	public void setViewStyle(String viewStyle) {
+		this.viewStyle = viewStyle;
+	}
 	public String getName() {
 	    return name;
 	}
@@ -47,12 +53,6 @@ public class Properties implements Serializable {
 	}
 	public void setSizeZ(int sizeZ) {
 		this.sizeZ = sizeZ;
-	}
-	public int getDimensions() {
-		return dimensions;
-	}
-	public void setDimensions(int dimensions) {
-		this.dimensions = dimensions;
 	}
 	
 	

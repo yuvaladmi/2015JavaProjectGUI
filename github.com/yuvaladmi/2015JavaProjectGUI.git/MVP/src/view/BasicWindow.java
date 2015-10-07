@@ -1,5 +1,6 @@
 package view;
 
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Display;
@@ -25,6 +26,16 @@ public abstract class BasicWindow implements Runnable {
 	protected SelectionListener exitListener;
 	protected SelectionListener saveListener;
 	protected SelectionListener loadListener;
+	protected DisposeListener exitDispose;
+
+	public DisposeListener getExitDispose() {
+		return exitDispose;
+	}
+
+	public void setExitDispose(DisposeListener exitDispose) {
+		this.exitDispose = exitDispose;
+		shell.addDisposeListener(exitDispose);
+	}
 
 	public SelectionListener getLoadListener() {
 		return loadListener;

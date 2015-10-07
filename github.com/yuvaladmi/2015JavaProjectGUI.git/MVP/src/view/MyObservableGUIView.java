@@ -1,6 +1,8 @@
 package view;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -9,6 +11,7 @@ import org.eclipse.swt.events.SelectionListener;
 
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
+import algorithms.search.Solution;
 
 public class MyObservableGUIView extends MyAbstractObservableGuiView {
 
@@ -19,7 +22,7 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				setChanged();
-				notifyObservers(("generate 3d maze myMaze 3 3 3").split(" "));
+				notifyObservers(("generate 3d maze").split(" "));
 			}
 
 			@Override
@@ -33,13 +36,13 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				setChanged();
-				notifyObservers(("solve myMaze BFS").split(" "));
+				notifyObservers(("solve").split(" "));
 
 			}
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
+				
 
 			}
 		});
@@ -47,8 +50,8 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				setChanged();
-				notifyObservers(("exit GUI").split(" "));
+//				setChanged();
+//				notifyObservers(("exit GUI").split(" "));
 				window.shell.dispose();
 			}
 
@@ -88,7 +91,15 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 
 			}
 		});
-		
+		window.setExitDispose(new DisposeListener() {
+			
+			@Override
+			public void widgetDisposed(DisposeEvent arg0) {
+				setChanged();
+				notifyObservers(("exit GUI").split(" "));
+				
+			}
+		});
 		window.setKey(new KeyAdapter()  {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
@@ -96,37 +107,38 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 				switch (arg0.keyCode) {
 				case SWT.ARROW_UP:
 					setChanged();
-					notifyObservers(("move BACKWARD myMaze").split(" "));
-					System.out.println("BACKWARD");
+					notifyObservers(("move BACKWARD").split(" "));
+					System.out.println("Up");
 					break;
 				case SWT.ARROW_DOWN:
 					setChanged();
-					notifyObservers(("move FORWARD myMaze").split(" "));
-					System.out.println("FORWARD");
+					notifyObservers(("move FORWARD").split(" "));
+					System.out.println("Down");
 					break;
 				case SWT.ARROW_RIGHT:
 					setChanged();
-					notifyObservers(("move RIGHT myMaze").split(" "));
-					System.out.println("RIGHT");
+					notifyObservers(("move RIGHT").split(" "));
+					System.out.println("Right");
 					break;
 				case SWT.ARROW_LEFT:
 					setChanged();
-					notifyObservers(("move LEFT myMaze").split(" "));
-					System.out.println("LEFT");
+					notifyObservers(("move LEFT").split(" "));
+					System.out.println("Left");
 					break;
 				case SWT.PAGE_UP:
 					setChanged();
-					notifyObservers(("move UP myMaze").split(" "));
-					System.out.println("UP");
+					notifyObservers(("move UP").split(" "));
+					System.out.println("LVLUp");
 					break;
 				case SWT.PAGE_DOWN:
 					setChanged();
-					notifyObservers(("move DOWN myMaze").split(" "));
-					System.out.println("DOWN");
+					notifyObservers(("move DOWN").split(" "));
+					System.out.println("Down");
 					break;
 				}
 			}
 		});
+		
 	}
 
 	@Override
@@ -174,6 +186,12 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 	public void displayPosition(Position p) {
 		((MazeWindow) window).setCurrentPosition(p);
 
+	}
+
+	@Override
+	public void displaySolution(Solution<Position> s) {
+		((MazeWindow) window).setCurrentSolution(s);
+		
 	}
 
 }

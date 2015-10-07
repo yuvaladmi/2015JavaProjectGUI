@@ -3,6 +3,8 @@ package view;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -19,18 +21,17 @@ import org.eclipse.swt.widgets.MessageBox;
 
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
+import algorithms.search.Solution;
 
 public class MazeWindow extends BasicWindow {
 
 	protected Maze3d currentMaze;
 	protected Position currentPosition;
+	protected Solution<Position> solution;
 	protected ArrayList<Maze3dViewDisplayer> mazeWidgetDisplayer;
 	Button startButton;
 	Button solveButton;
 	Button upButton;
-	Button downButton;
-	Button leftButton;
-	Button rightButton;
 
 	public MazeWindow(String title, int width, int height) {
 		super(title, width, height);
@@ -62,6 +63,11 @@ public class MazeWindow extends BasicWindow {
 		this.currentPosition = currentPosition;
 		widgetRefresh();
 	}
+	
+	public void setCurrentSolution(Solution<Position> solution) {
+		this.solution = solution;
+		widgetRefresh();
+	}
 
 	public void setKeyListener(KeyListener key) {
 		this.key = key;
@@ -73,6 +79,8 @@ public class MazeWindow extends BasicWindow {
 				display.setMazeData(currentMaze);
 			if (currentPosition != null)
 				display.setPositionData(currentPosition);
+			if(solution != null)
+				display.setSolutionData(solution);
 		}
 	}
 
@@ -120,11 +128,7 @@ public class MazeWindow extends BasicWindow {
 		gameGenerateItem.addSelectionListener(generateListener);
 		gameSolveItem.addSelectionListener(solveListener);
 
-		shell.addListener(SWT.Close, new Listener() {
-			public void handleEvent(Event event) {
-				event.doit = true;
-			}
-		});
+		
 		
 		Maze3dViewDisplayer maze = new Maze3D(shell, SWT.BORDER,'x');
 		maze.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
