@@ -50,7 +50,8 @@ public class Run {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
 		}
-		Maze3dModel m = new Maze3dModel(result);
+		Maze3dModel m = new Maze3dModel();
+		m.setProperties(result);
 		abstractView view = null;
 		switch (result.getViewStyle()) {
 		case "GUI":
@@ -62,15 +63,10 @@ public class Run {
 		default:
 			break;
 		}
-//		 Maze3dViewCLI view = new Maze3dViewCLI(new BufferedReader(new
-//		 InputStreamReader(System.in)), new PrintWriter(System.out));
-//		MyObservableGUIView view = new MyObservableGUIView("MyMaze", 500, 300);
 		Presenter p = new Presenter(m, view);
 		m.addObserver(p);
 		view.addObserver(p);
 		view.start();
-		// BasicWindow bw = new MazeWindow("Maze Y&A", 500, 300);
-		// bw.run();
 			}
 		});
 		propWindow.run();

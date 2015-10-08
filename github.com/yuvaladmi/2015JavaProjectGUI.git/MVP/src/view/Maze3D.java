@@ -16,7 +16,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 
 import algorithms.mazeGenerators.Position;
-import algorithms.search.State;
 
 public class Maze3D extends Maze3dViewDisplayer {
 	public int characterX = 0;
@@ -32,11 +31,14 @@ public class Maze3D extends Maze3dViewDisplayer {
 		this.pivot = pivot;
 		this.index = 0;
 		// set a white background (red, green, blue)
-		setBackground(new Color(null, 255, 255, 255));
+		setBackground(new Color(getDisplay(), 255, 255, 255));
+		setBackgroundImage(imageBackround);
+		
 		addPaintListener(new PaintListener() {
 
 			@Override
 			public void paintControl(PaintEvent e) {
+				e.gc.drawImage(imageBackround, 0, 0);
 				Stack<Position> stack = null;
 				if (solution != null) {
 					flag = 1;
@@ -45,8 +47,8 @@ public class Maze3D extends Maze3dViewDisplayer {
 				} else
 					flag = 0;
 				if (maze != null) {
-					e.gc.setForeground(new Color(null, 0, 0, 0));
-					e.gc.setBackground(new Color(null, 0, 0, 0));
+//					e.gc.setForeground(new Color(null, 0, 0, 0));
+//					e.gc.setBackground(new Color(null, 0, 0, 0));
 
 					Position temp = new Position(0, 0, 0);
 
@@ -122,8 +124,9 @@ public class Maze3D extends Maze3dViewDisplayer {
 						for (int j = 0; j < crossMaze[i].length; j++) {
 							int x = j * w;
 							int y = i * h;
-							if (crossMaze[i][j] != 0)
-								e.gc.fillRectangle(x, y, w, h);
+							if (crossMaze[i][j] == 0)
+								e.gc.drawImage(new Image(getDisplay(), "resources/silver1.gif"), 0, 0, imageWall.getBounds().width, imageWall.getBounds().height, x, y, w, h);
+//								e.gc.fillRectangle(x, y, w, h);
 							if (i == pos1 && j == pos2)
 								e.gc.drawImage(image, 0, 0, imageWidth, imageHeight, x, y, w, h);
 							if (i == goal1 && j == goal2 && index == goal3)

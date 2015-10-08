@@ -1,5 +1,10 @@
 package view;
 
+import java.beans.XMLDecoder;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -12,8 +17,13 @@ import org.eclipse.swt.events.SelectionListener;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
+import presenter.Properties;
+import properties.BasicWindow;
+import properties.MessegeWindow;
 
 public class MyObservableGUIView extends MyAbstractObservableGuiView {
+
+	protected MazeWindow window;
 
 	public MyObservableGUIView(String title, int width, int height) {
 		window = new MazeWindow(title, width, height);
@@ -42,7 +52,6 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
-				
 
 			}
 		});
@@ -50,8 +59,6 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-//				setChanged();
-//				notifyObservers(("exit GUI").split(" "));
 				window.shell.dispose();
 			}
 
@@ -61,12 +68,30 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 
 			}
 		});
-		window.setSaveListener(new SelectionListener() {
+		window.setPropertiesListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				setChanged();
-				notifyObservers(("save zip").split(" "));
+				new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						MessegeWindow wm = new MessegeWindow("Properties", 300, 300);
+						wm.run();
+						Properties result = new Properties();
+						try {
+							XMLDecoder xmlD = new XMLDecoder(new BufferedInputStream(new FileInputStream("properties.xml")));
+							result = (Properties) xmlD.readObject();
+							xmlD.close();
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						setChanged();
+						notifyObservers(result);
+						// TODO Auto-generated method stub
+					}
+				}).start();
 
 			}
 
@@ -76,31 +101,17 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 
 			}
 		});
-		window.setLoadListener(new SelectionListener() {
 
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				setChanged();
-				notifyObservers(("load zip").split(" "));
-
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-		});
 		window.setExitDispose(new DisposeListener() {
-			
+
 			@Override
 			public void widgetDisposed(DisposeEvent arg0) {
 				setChanged();
 				notifyObservers(("exit GUI").split(" "));
-				
+
 			}
 		});
-		window.setKey(new KeyAdapter()  {
+		window.setKey(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 
@@ -138,7 +149,7 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 				}
 			}
 		});
-		
+
 	}
 
 	@Override
@@ -178,20 +189,20 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 
 	@Override
 	public void displayMaze(Maze3d sendGame) {
-		((MazeWindow) window).setCurrentMaze(sendGame);
+		window.setCurrentMaze(sendGame);
 
 	}
 
 	@Override
 	public void displayPosition(Position p) {
-		((MazeWindow) window).setCurrentPosition(p);
+		window.setCurrentPosition(p);
 
 	}
 
 	@Override
 	public void displaySolution(Solution<Position> s) {
-		((MazeWindow) window).setCurrentSolution(s);
-		
+		window.setCurrentSolution(s);
+
 	}
 
 }

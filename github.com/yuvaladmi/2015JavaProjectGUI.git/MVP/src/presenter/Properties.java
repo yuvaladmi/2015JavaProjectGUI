@@ -11,7 +11,14 @@ public class Properties implements Serializable {
 	int sizeX;
 	int sizeY;
 	int sizeZ;
+	char pivot;
 	
+	public char getPivot() {
+		return pivot;
+	}
+	public void setPivot(char pivot) {
+		this.pivot = pivot;
+	}
 	public String getViewStyle() {
 		return viewStyle;
 	}
@@ -54,6 +61,8 @@ public class Properties implements Serializable {
 	public void setSizeZ(int sizeZ) {
 		this.sizeZ = sizeZ;
 	}
+
+	
 	
 	
 }

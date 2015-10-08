@@ -39,15 +39,15 @@ import presenter.Properties;
 public class Maze3dModel extends abstractModel {
 
 	protected Properties properties;
-	
-	public Maze3dModel(Properties properties) {
+
+	public Maze3dModel() {
 		hMaze = new HashMap<String, Maze3d>();
 		hSol = new HashMap<Maze3d, Solution<Position>>();
 		hPosition = new HashMap<String, Position>();
 		sb = new StringBuilder();
 		numOfThread = 10;
 		threadpool = Executors.newFixedThreadPool(numOfThread);
-		this.properties = properties;
+		properties = new Properties();
 		loadZip();
 	}
 
@@ -65,7 +65,8 @@ public class Maze3dModel extends abstractModel {
 		int y = properties.getSizeY();
 		int z = properties.getSizeZ();
 		String name = properties.getName();
-		
+		System.out.println(x + " " + y + " " + z + " " + name);
+
 		Future<Maze3d> fCallMaze = threadpool.submit(new Callable<Maze3d>() {
 
 			@Override
@@ -105,16 +106,9 @@ public class Maze3dModel extends abstractModel {
 	 */
 	@Override
 	public int[][] crossSection(String[] arr) {
-		sb = new StringBuilder();
-		int i = arr.length - 2;
-		if (arr[i].equals("for")) {
-			for (int j = i + 1; j < arr.length; j++) {
-				sb.append(arr[j]);
-			}
-		}
-		String name = sb.toString();
-		int index = (arr[--i].charAt(0)) - 48;
-		char crossBy = arr[--i].charAt(0);
+		String name = properties.getName();
+		int index = Integer.parseInt(arr[arr.length - 1]);
+		char crossBy = arr[arr.length - 2].charAt(0);
 		Maze3d maze = hMaze.get(name);
 		int[][] myMaze = null;
 		switch (crossBy) {
@@ -151,7 +145,7 @@ public class Maze3dModel extends abstractModel {
 	 */
 	@Override
 	public void save(String[] arr) {
-		String name = arr[arr.length - 2];
+		String name = properties.getName();
 		String fileName = arr[arr.length - 1];
 		Maze3d m = hMaze.get(name);
 		try {
@@ -252,14 +246,14 @@ public class Maze3dModel extends abstractModel {
 	 * This method gets a name of a maze and sends the Controller its solution
 	 */
 	@Override
-	public Solution<Position> bringSolution(String arr) {
-		Maze3d maze = hMaze.get(arr);
+	public Solution<Position> bringSolution() {
+		Maze3d maze = hMaze.get(properties.getName());
 		// Solution<Position> s = hSol.get(maze);
 		if (maze != null) {
 			Solution<Position> sol = hSol.get(maze);
 			return sol;
 		}
-		notifyObservers("Solution do not exist for " + arr + " maze.");
+		notifyObservers("Solution do not exist for " + properties.getName() + " maze.");
 		return null;
 	}
 
@@ -268,11 +262,11 @@ public class Maze3dModel extends abstractModel {
 	 */
 	@Override
 	public void gameSize(String[] arr) {
-		Maze3d temp = hMaze.get(arr[arr.length - 1]);
+		Maze3d temp = hMaze.get(properties.getName());
 		try {
 			int size = (temp.toByteArray()).length;
 			setChanged();
-			notifyObservers("Maze " + arr[arr.length - 1] + " size is:" + size);
+			notifyObservers("Maze " + properties.getName() + " size is:" + size);
 		} catch (IOException e) {
 			setChanged();
 			notifyObservers("Error, please try again");
@@ -457,6 +451,17 @@ public class Maze3dModel extends abstractModel {
 			}
 		}
 
+	}
+
+	public Properties getProperties() {
+		return properties;
+	}
+
+	public void setProperties(Properties properties) {
+		this.properties = properties;
+		System.out.println(properties.getSizeX());
+		System.out.println(this.properties.getSizeX());
+		System.out.println(getProperties().getSizeX());
 	}
 
 	@Override

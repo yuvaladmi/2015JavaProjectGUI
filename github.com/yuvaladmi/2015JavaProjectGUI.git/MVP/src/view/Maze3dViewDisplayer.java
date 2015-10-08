@@ -16,15 +16,54 @@ public abstract class Maze3dViewDisplayer extends Canvas {
 	protected Image image;
 	protected Image imageGoal;
 	protected Image imageHint;
-	protected int imageWidth;
+	protected Image imageBackround;
+	protected Image imageWall;
 	protected int imageHeight;
+	protected int imageWidth;
 
 	public Maze3dViewDisplayer(Composite parent, int style) {
 		super(parent, style);
 		position = new Position(0, 0, 0);
-		image = new Image(getDisplay(), "resources/minion.jpg");
-		imageGoal = new Image(getDisplay(), "resources/timthumb.png");
-		imageHint = new Image(getDisplay(), "resources/banana.jpg");
+	}
+	
+	public Image getImageBackround() {
+		return imageBackround;
+	}
+	
+	public void setImageBackroundString(String str) {
+		imageBackround = new Image(getDisplay(), str);
+	}
+	
+	public Image getImageWall() {
+		return imageWall;
+	}
+	
+	public void setImageWallString(String str) {
+		this.imageWall = new Image(getDisplay(), str);
+	}
+	
+	public Image getImage() {
+		return image;
+	}
+	
+	public void setImageString(String str) {
+		image =new Image (getDisplay(), str);
+	}
+	
+	public Image getImageGoal() {
+		return imageGoal;
+	}
+	
+	public void setImageGoalString(String str) {
+		imageGoal =new Image (getDisplay(), str);
+	}
+	
+	public Image getImageHint() {
+		return imageHint;
+	}
+	
+	public void setImageHintString(String str) {
+		imageHint =new Image (getDisplay(), str);
 	}
 
 	public Maze3d getMaze() {

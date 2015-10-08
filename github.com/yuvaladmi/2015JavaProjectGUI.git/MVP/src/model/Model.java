@@ -3,6 +3,7 @@ package model;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
+import presenter.Properties;
 
 public interface Model {
     public void dirToPath(String[] arr);
@@ -23,7 +24,7 @@ public interface Model {
 
     public void solve(String[] arr);
 
-    public Solution<Position> bringSolution(String arr);
+    public Solution<Position> bringSolution();
 
     public void gameSize(String[] arr);
 
@@ -43,6 +44,9 @@ public interface Model {
 
 	public void moveForward();
 
-	public Position getHPosition(String name);
+	public void setProperties(Properties properties);
+	
+	public Properties getProperties();
    
+	public Position getHPosition(String name);
 }

@@ -10,10 +10,12 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -22,6 +24,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
+import properties.MessegeWindow;
 
 public class MazeWindow extends BasicWindow {
 
@@ -33,6 +36,23 @@ public class MazeWindow extends BasicWindow {
 	Button solveButton;
 	Button upButton;
 
+	protected Menu gameMenu;
+	protected MenuItem gameMenuHeader;
+	protected MenuItem  gameGenerateItem,gameSolveItem;
+	
+	protected SelectionListener generateListener;
+	protected SelectionListener solveListener;
+	
+	protected Menu menuBar, fileMenu;
+	protected MenuItem fileMenuHeader;
+	protected MenuItem fileExitItem, filePropertiesItem;
+
+	protected Label label;
+	protected KeyListener key;
+	
+	protected SelectionListener exitListener;
+	protected SelectionListener propertiesListener;
+	
 	public MazeWindow(String title, int width, int height) {
 		super(title, width, height);
 		// startButton = new Button(shell, SWT.PUSH);
@@ -73,6 +93,23 @@ public class MazeWindow extends BasicWindow {
 		this.key = key;
 	}
 
+	public SelectionListener getGenerateListener() {
+		return generateListener;
+	}
+
+	public void setGenerateListener(SelectionListener startKey) {
+		this.generateListener = startKey;
+	}
+
+	public SelectionListener getSolveListener() {
+		return solveListener;
+	}
+
+	public void setSolveListener(SelectionListener solveKey) {
+		this.solveListener = solveKey;
+	}
+
+
 	private void widgetRefresh() {
 		for (Maze3dViewDisplayer display : mazeWidgetDisplayer) {
 			if (currentMaze != null)
@@ -87,6 +124,7 @@ public class MazeWindow extends BasicWindow {
 	@Override
 	public void initWidgets() {
 		shell.setLayout(new GridLayout(3, false));
+//		shell.setBackgroundImage(new Image(display, "resources/red.jpg"));
 
 		menuBar = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menuBar);
@@ -96,14 +134,13 @@ public class MazeWindow extends BasicWindow {
 		fileMenu = new Menu(shell, SWT.DROP_DOWN);
 		fileMenuHeader.setMenu(fileMenu);
 
-		fileSaveItem = new MenuItem(fileMenu, SWT.PUSH);
-		fileSaveItem.setText("&Save");
-
-		fileLoadItem = new MenuItem(fileMenu, SWT.PUSH);
-		fileLoadItem.setText("&Load");
+		filePropertiesItem = new MenuItem(fileMenu, SWT.PUSH);
+		filePropertiesItem.setText("&Properties");
 
 		fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
 		fileExitItem.setText("&Exit");
+		filePropertiesItem.addSelectionListener(propertiesListener);
+		
 
 		gameMenu = new Menu(shell, SWT.DROP_DOWN);
 		gameMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
@@ -115,14 +152,6 @@ public class MazeWindow extends BasicWindow {
 		gameSolveItem = new MenuItem(gameMenu, SWT.PUSH);
 		gameSolveItem.setText("&Solve");
 
-		helpMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
-		helpMenuHeader.setText("&Help");
-
-		helpMenu = new Menu(shell, SWT.DROP_DOWN);
-		helpMenuHeader.setMenu(helpMenu);
-
-		helpGetHelpItem = new MenuItem(helpMenu, SWT.PUSH);
-		helpGetHelpItem.setText("&Get Help");
 
 		fileExitItem.addSelectionListener(exitListener);
 		gameGenerateItem.addSelectionListener(generateListener);
@@ -133,10 +162,13 @@ public class MazeWindow extends BasicWindow {
 		Maze3dViewDisplayer maze = new Maze3D(shell, SWT.BORDER,'x');
 		maze.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		this.mazeWidgetDisplayer.add(maze);
+		maze.setImageString("resources/character.png");
+		maze.setImageGoalString("resources/win.png");
+		maze.setImageHintString("resources/banana.gif");
+		maze.setImageBackroundString("resources/blue.jpg");
+		maze.setImageWallString("resources/silver1.gif");
 		
-		upButton.addKeyListener(key);
-		
-		
+		upButton.addKeyListener(key);		
 	}
 
 	public void setCharacterPosition(int x, int y, int z) {
@@ -150,51 +182,6 @@ public class MazeWindow extends BasicWindow {
 		}
 	}
 
-	public void moveUp() {
-		int x = currentPosition.getX();
-		x++;
-		if (x < currentMaze.getX())
-			setCharacterPosition(x, currentPosition.getY(), currentPosition.getZ());
-
-	}
-
-	public void moveDown() {
-		int x = currentPosition.getX();
-		x--;
-		if (x >= 0)
-			setCharacterPosition(x, currentPosition.getY(), currentPosition.getZ());
-
-	}
-
-	public void moveLeft() {
-		int z = currentPosition.getZ();
-		z--;
-		if (z >= 0)
-			setCharacterPosition(currentPosition.getX(), currentPosition.getY(), z);
-	}
-
-	public void moveRight() {
-		int z = currentPosition.getZ();
-		z++;
-		if (z < currentMaze.getZ())
-			setCharacterPosition(currentPosition.getX(), currentPosition.getY(), z);
-
-	}
-
-	public void moveForward() {
-		int y = currentPosition.getY();
-		y++;
-		if (y < currentMaze.getY())
-			setCharacterPosition(currentPosition.getX(), y, currentPosition.getZ());
-	}
-
-	public void moveBackward() {
-		int y = currentPosition.getY();
-		y--;
-		if (y >= 0)
-			setCharacterPosition(currentPosition.getX(), y, currentPosition.getZ());
-
-	}
 
 	@Override
 	public void displayPopUp(String str) {
@@ -203,6 +190,29 @@ public class MazeWindow extends BasicWindow {
 		popUpWindow.setMessage(str);
 		popUpWindow.open();
 
+	}
+	public SelectionListener getPropertiesListener() {
+		return propertiesListener;
+	}
+	
+	public void setPropertiesListener(SelectionListener propertiesListener) {
+		this.propertiesListener = propertiesListener;
+	}
+
+	public SelectionListener getExitListener() {
+		return exitListener;
+	}
+
+	public void setExitListener(SelectionListener exitListener) {
+		this.exitListener = exitListener;
+	}
+
+	public KeyListener getKey() {
+		return key;
+	}
+
+	public void setKey(KeyListener key) {
+		this.key = key;
 	}
 
 }

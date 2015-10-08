@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
+import presenter.Properties;
 
 public abstract class abstractModel extends Observable implements Model {
 
@@ -35,7 +36,7 @@ public abstract class abstractModel extends Observable implements Model {
 
 	public abstract void solve(String[] arr);
 
-	public abstract Solution<Position> bringSolution(String arr);
+	public abstract Solution<Position> bringSolution();
 
 	public abstract void gameSize(String[] arr);
 
@@ -55,5 +56,9 @@ public abstract class abstractModel extends Observable implements Model {
 
 	public abstract void moveForward();
 
+	public abstract void setProperties(Properties properties);
+	
+	public abstract Properties getProperties();
+	
 	public abstract Position getHPosition(String name);
 }

@@ -50,6 +50,13 @@ public class MessegeWindow extends BasicWindow {
 		new Label(shell, SWT.NONE).setText("Num of threads:");
 		final Text numOfThreads = new Text(shell, SWT.BORDER);
 		numOfThreads.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		new Label(shell, SWT.NONE).setText("Choose pivot:");
+		final Combo pivot = new Combo(shell, SWT.DROP_DOWN | SWT.PUSH | SWT.BORDER);
+		pivot.add("x");
+		pivot.add("y");
+		pivot.add("z");
+		pivot.select(0);
 
 		new Label(shell, SWT.NONE).setText("Choose solving algorithm:");
 		final Combo icons = new Combo(shell, SWT.DROP_DOWN | SWT.PUSH | SWT.BORDER);
@@ -74,23 +81,28 @@ public class MessegeWindow extends BasicWindow {
 					properties.setSizeX(Integer.parseInt(sizeX.getText()));
 				} else {
 					displayError("Invalid 'x' value");
+					properties.setSizeX(7);
 				}
 				if ((Integer.parseInt(sizeY.getText()) % 2 != 0) && (Integer.parseInt(sizeY.getText()) >= 3)) {
 					properties.setSizeY(Integer.parseInt(sizeY.getText()));
 				} else {
 					displayError("Invalid 'y' value");
+					properties.setSizeY(7);
 				}
 				if ((Integer.parseInt(sizeZ.getText()) % 2 != 0) && (Integer.parseInt(sizeZ.getText()) >= 3)) {
 					properties.setSizeZ(Integer.parseInt(sizeZ.getText()));
 				} else {
 					displayError("Invalid 'z' value");
+					properties.setSizeZ(7);
 				}
 				if ((Integer.parseInt(numOfThreads.getText()) >= 1)) {
 					properties.setNumOfThreads(Integer.parseInt(numOfThreads.getText()));
 				} else {
 					displayError("Invalid number of threads value");
+					properties.setNumOfThreads(10);
 				}
-				
+				properties.setPivot(pivot.getText().charAt(0));
+			
 				properties.setViewStyle(icons1.getText());
 
 				properties.setSolvingAlgo(icons.getText());
