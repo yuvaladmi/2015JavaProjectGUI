@@ -2,7 +2,7 @@
 <java version="1.8.0_51" class="java.beans.XMLDecoder">
  <object class="presenter.Properties">
   <void property="name">
-   <string>x</string>
+   <string>m</string>
   </void>
   <void property="numOfThreads">
    <int>9</int>

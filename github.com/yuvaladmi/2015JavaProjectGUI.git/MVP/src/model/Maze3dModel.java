@@ -11,12 +11,9 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Observable;
 import java.util.Observer;
-import java.util.Stack;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -92,8 +89,8 @@ public class Maze3dModel extends abstractModel {
 	 * This method gets a Maze name and sends the Controller this maze.
 	 */
 	@Override
-	public Maze3d sendGame() {
-		String name = properties.getName();
+	public Maze3d sendGame(String str) {
+		String name = str;
 		Maze3d temp = hMaze.get(name);
 		return temp;
 	}
@@ -171,6 +168,8 @@ public class Maze3dModel extends abstractModel {
 	public void load(String[] arr) {
 		String name = arr[arr.length - 1];
 		String fileName = arr[arr.length - 2];
+		properties.setName(name);
+		
 		try {
 			byte[] temp = new byte[4096];
 			InputStream in = new MyDecompressorInputStream(new FileInputStream(fileName));
@@ -182,6 +181,7 @@ public class Maze3dModel extends abstractModel {
 			}
 			Maze3d maze = new Maze3d(b);
 			hMaze.put(name, maze);
+			hPosition.put(name, maze.getStart());
 			setChanged();
 			notifyObservers(("load:" + name).split(":"));
 		} catch (FileNotFoundException e) {

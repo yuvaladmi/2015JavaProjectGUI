@@ -10,15 +10,12 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
 import presenter.Properties;
-import properties.BasicWindow;
 import properties.MessegeWindow;
 
 public class MyObservableGUIView extends MyAbstractObservableGuiView {
@@ -37,8 +34,6 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
-
 			}
 		});
 		window.setSolveListener(new SelectionListener() {
@@ -64,8 +59,6 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
-
 			}
 		});
 		window.setPropertiesListener(new SelectionListener() {
@@ -80,19 +73,50 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 						wm.run();
 						Properties result = new Properties();
 						try {
-							XMLDecoder xmlD = new XMLDecoder(new BufferedInputStream(new FileInputStream("properties.xml")));
+							XMLDecoder xmlD = new XMLDecoder(
+									new BufferedInputStream(new FileInputStream("properties.xml")));
 							result = (Properties) xmlD.readObject();
 							xmlD.close();
 						} catch (FileNotFoundException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						setChanged();
 						notifyObservers(result);
-						// TODO Auto-generated method stub
 					}
 				}).start();
 
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+			}
+		});
+
+		window.setSaveListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				String fileName = window.getFileName();
+				setChanged();
+				notifyObservers(("save "+fileName).split(" "));
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		window.setLoadListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				String fileName = window.getFileName();
+				fileName = fileName.replace("\\", "/");
+				String[] file = (fileName.split("/"));
+				setChanged();
+				notifyObservers(("load "+fileName+" "+file[file.length-1]).split(" "));
 			}
 
 			@Override

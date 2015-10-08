@@ -22,7 +22,7 @@ public abstract class abstractModel extends Observable implements Model {
 
 	public abstract void generateMaze(String[] arr);
 
-	public abstract Maze3d sendGame();
+	public abstract Maze3d sendGame(String str);
 
 	public abstract int[][] crossSection(String[] arr);
 

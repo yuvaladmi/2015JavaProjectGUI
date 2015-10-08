@@ -1,12 +1,7 @@
 package view;
 
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 public abstract class BasicWindow implements Runnable {

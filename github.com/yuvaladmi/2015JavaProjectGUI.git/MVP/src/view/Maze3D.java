@@ -3,18 +3,11 @@ package view;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.FileDialog;
-
 import algorithms.mazeGenerators.Position;
 
 public class Maze3D extends Maze3dViewDisplayer {
@@ -33,7 +26,7 @@ public class Maze3D extends Maze3dViewDisplayer {
 		// set a white background (red, green, blue)
 		setBackground(new Color(getDisplay(), 255, 255, 255));
 		setBackgroundImage(imageBackround);
-		
+
 		addPaintListener(new PaintListener() {
 
 			@Override
@@ -47,8 +40,8 @@ public class Maze3D extends Maze3dViewDisplayer {
 				} else
 					flag = 0;
 				if (maze != null) {
-//					e.gc.setForeground(new Color(null, 0, 0, 0));
-//					e.gc.setBackground(new Color(null, 0, 0, 0));
+					// e.gc.setForeground(new Color(null, 0, 0, 0));
+					// e.gc.setBackground(new Color(null, 0, 0, 0));
 
 					Position temp = new Position(0, 0, 0);
 
@@ -125,27 +118,31 @@ public class Maze3D extends Maze3dViewDisplayer {
 							int x = j * w;
 							int y = i * h;
 							if (crossMaze[i][j] == 0)
-								e.gc.drawImage(new Image(getDisplay(), "resources/silver1.gif"), 0, 0, imageWall.getBounds().width, imageWall.getBounds().height, x, y, w, h);
-//								e.gc.fillRectangle(x, y, w, h);
+								e.gc.drawImage(new Image(getDisplay(), "resources/silver1.gif"), 0, 0,
+										imageWall.getBounds().width, imageWall.getBounds().height, x, y, w, h);
 							if (i == pos1 && j == pos2)
 								e.gc.drawImage(image, 0, 0, imageWidth, imageHeight, x, y, w, h);
 							if (i == goal1 && j == goal2 && index == goal3)
 								e.gc.drawImage(imageGoal, 0, 0, imageGoal.getBounds().width,
 										imageGoal.getBounds().height, x, y, w, h);
 							if (flag == 1) {
+								Position p = new Position(temp);
 								switch (pivot) {
 								case 'x':
-									if (stack.contains(new Position(index, i, j)))
+									p = new Position(index, i, j);
+									if ((stack.contains(p) && !p.equals(maze.getEnd())))
 										e.gc.drawImage(imageHint, 0, 0, imageHint.getBounds().width,
 												imageHint.getBounds().height, x, y, w, h);
 									break;
 								case 'y':
-									if (stack.contains(new Position(i, index, j)))
+									p = new Position(i, index, j);
+									if ((stack.contains(p) && !p.equals(maze.getEnd())))
 										e.gc.drawImage(imageHint, 0, 0, imageHint.getBounds().width,
 												imageHint.getBounds().height, x, y, w, h);
 									break;
 								case 'z':
-									if (stack.contains(new Position(i, j, index)))
+									p = new Position(i, j, index);
+									if ((stack.contains(p) && !p.equals(maze.getEnd())))
 										e.gc.drawImage(imageHint, 0, 0, imageHint.getBounds().width,
 												imageHint.getBounds().height, x, y, w, h);
 									break;

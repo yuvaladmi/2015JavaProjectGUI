@@ -42,7 +42,7 @@ public class Presenter implements Observer {
 					v.displaySolution(m.bringSolution());
 					break;
 				default:
-					Maze3d maze = m.sendGame();
+					Maze3d maze = m.sendGame(arr[2]);
 					v.displayMaze(maze);
 					v.displayPosition(maze.getStart());
 					break;
@@ -147,7 +147,6 @@ public class Presenter implements Observer {
 				if (((arg.getClass()).getName()).equals("presenter.Properties")) {
 					Properties p= (Properties) arg;
 					m.setProperties(p);
-					System.out.println(this.m.getProperties().getSizeX());
 				}
 			}
 		} else {
@@ -169,7 +168,7 @@ public class Presenter implements Observer {
 						command.doCommand(("display solution " + temp[1]).split(" "));
 						break;
 					case "move":
-						v.displayMaze(m.sendGame());
+						v.displayMaze(m.sendGame(temp[1]));
 						v.displayPosition(m.getHPosition(temp[1]));
 						break;
 

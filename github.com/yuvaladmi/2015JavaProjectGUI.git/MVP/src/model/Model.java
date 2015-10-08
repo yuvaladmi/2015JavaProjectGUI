@@ -10,7 +10,7 @@ public interface Model {
 
     public void generateMaze(String[] arr);
 
-    public Maze3d sendGame();
+    public Maze3d sendGame(String str);
 
     public int[][] crossSection(String[] arr);
 
