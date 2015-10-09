@@ -11,7 +11,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Observer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -33,10 +32,18 @@ import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
 import presenter.Properties;
 
+/**
+ * @author Yuval Admi & Afek Ben Simon
+ * @since 08.10.2015 This class extends the abstract class - CommonModel. It
+ *        should get a command from the presenter, do it and send a notification
+ *        when it ends.
+ * 
+ */
 public class Maze3dModel extends abstractModel {
 
-	protected Properties properties;
-
+	/**
+	 * CTOR
+	 */
 	public Maze3dModel() {
 		hMaze = new HashMap<String, Maze3d>();
 		hSol = new HashMap<Maze3d, Solution<Position>>();
@@ -45,17 +52,11 @@ public class Maze3dModel extends abstractModel {
 		numOfThread = 10;
 		threadpool = Executors.newFixedThreadPool(numOfThread);
 		properties = new Properties();
+		// Loads the maps from previous plays
 		loadZip();
 	}
 
-	public void addObservers(Observer o) {
-		addObserver(o);
-	}
-
-	/**
-	 * This method create a new Maze3d in a thread. All the mazes saved in an
-	 * HashMap.
-	 */
+	
 	@Override
 	public void generateMaze(String[] arr) {
 		int x = properties.getSizeX();
@@ -85,9 +86,7 @@ public class Maze3dModel extends abstractModel {
 		notifyObservers(messege);
 	}
 
-	/**
-	 * This method gets a Maze name and sends the Controller this maze.
-	 */
+	
 	@Override
 	public Maze3d sendGame(String str) {
 		String name = str;
@@ -95,12 +94,7 @@ public class Maze3dModel extends abstractModel {
 		return temp;
 	}
 
-	/**
-	 * This method gets a name of a maze and sends the Controller a CrossSection
-	 * of this maze
-	 * 
-	 * @return
-	 */
+	
 	@Override
 	public int[][] crossSection(String[] arr) {
 		String name = properties.getName();
@@ -129,17 +123,14 @@ public class Maze3dModel extends abstractModel {
 			break;
 		default:
 			setChanged();
-			notifyObservers("Error, pkease try again");
+			notifyObservers("Error, please try again");
 			break;
 		}
 		return myMaze;
 
 	}
 
-	/**
-	 * This methods gets a name of a file and a maze and save this maze in the
-	 * file.
-	 */
+	
 	@Override
 	public void save(String[] arr) {
 		String name = properties.getName();
@@ -160,16 +151,13 @@ public class Maze3dModel extends abstractModel {
 		}
 	}
 
-	/**
-	 * This methods gets a name of a file and a maze and load to the new maze
-	 * the objects from the file.
-	 */
+	
 	@Override
 	public void load(String[] arr) {
 		String name = arr[arr.length - 1];
 		String fileName = arr[arr.length - 2];
 		properties.setName(name);
-		
+
 		try {
 			byte[] temp = new byte[4096];
 			InputStream in = new MyDecompressorInputStream(new FileInputStream(fileName));
@@ -193,10 +181,7 @@ public class Maze3dModel extends abstractModel {
 		}
 	}
 
-	/**
-	 * This method gets a name of a maze and solving algorithm and solves it in
-	 * a Thread. All the solutions saved in an HashMap.
-	 */
+	
 	@Override
 	public void solve(String[] arr) {
 		String nameAlg = properties.getSolvingAlgo();
@@ -242,9 +227,7 @@ public class Maze3dModel extends abstractModel {
 		notifyObservers(("solution:" + name).split(":"));
 	}
 
-	/**
-	 * This method gets a name of a maze and sends the Controller its solution
-	 */
+	
 	@Override
 	public Solution<Position> bringSolution() {
 		Maze3d maze = hMaze.get(properties.getName());
@@ -257,9 +240,7 @@ public class Maze3dModel extends abstractModel {
 		return null;
 	}
 
-	/**
-	 * This method gets a name of a maze and sends the Controller its size.
-	 */
+	
 	@Override
 	public void gameSize(String[] arr) {
 		Maze3d temp = hMaze.get(properties.getName());
@@ -273,9 +254,7 @@ public class Maze3dModel extends abstractModel {
 		}
 	}
 
-	/**
-	 * This method gets a name of a file and sends the Controller its size.
-	 */
+	
 	@Override
 	public void fileSize(String[] arr) {
 		File f = new File(arr[arr.length - 1]);
@@ -325,9 +304,7 @@ public class Maze3dModel extends abstractModel {
 		}
 	}
 
-	/**
-	 * This method closes all the open threads.
-	 */
+	
 	@Override
 	public void close() {
 		saveZip();
@@ -337,6 +314,7 @@ public class Maze3dModel extends abstractModel {
 		// wait 10 seconds over and over again until all running jobs have
 		// finished
 		try {
+			@SuppressWarnings("unused")
 			boolean allTasksCompleted = false;
 			while (!(allTasksCompleted = threadpool.awaitTermination(10, TimeUnit.SECONDS)))
 				;
@@ -352,7 +330,7 @@ public class Maze3dModel extends abstractModel {
 		// TODO Auto-generated method stub
 
 	}
-
+	
 	@Override
 	public void moveUp() {
 		String name = properties.getName();
@@ -459,9 +437,6 @@ public class Maze3dModel extends abstractModel {
 
 	public void setProperties(Properties properties) {
 		this.properties = properties;
-		System.out.println(properties.getSizeX());
-		System.out.println(this.properties.getSizeX());
-		System.out.println(getProperties().getSizeX());
 	}
 
 	@Override

@@ -21,7 +21,4 @@ public abstract class abstractView extends Observable implements View {
 
 	public abstract void displayPosition(Position p);
 
-	// @Override
-	// public abstract void addObservers(Observer o);
-
 }

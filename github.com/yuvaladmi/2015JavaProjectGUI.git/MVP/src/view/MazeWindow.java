@@ -19,6 +19,13 @@ import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
 
+/**
+ * 
+ * @author Yuval Admi & Afek Ben Simon
+ * @since 08.10.15 This class extends BasicWindow - shows a 3dMaze and a
+ *        specific buttons and menu
+ *
+ */
 public class MazeWindow extends BasicWindow {
 
 	protected Maze3d currentMaze;
@@ -50,6 +57,13 @@ public class MazeWindow extends BasicWindow {
 
 	protected String fileName;
 
+	/**
+	 * CTOR
+	 * 
+	 * @param title
+	 * @param width
+	 * @param height
+	 */
 	public MazeWindow(String title, int width, int height) {
 		super(title, width, height);
 		upButton = new Button(shell, 0);
@@ -116,7 +130,9 @@ public class MazeWindow extends BasicWindow {
 	public void setSolveListener(SelectionListener solveKey) {
 		this.solveListener = solveKey;
 	}
-
+/**
+ * This method checks which widget has changed and sets it in the display Class
+ */
 	private void widgetRefresh() {
 		for (Maze3dViewDisplayer display : mazeWidgetDisplayer) {
 			if (currentMaze != null)
@@ -213,12 +229,18 @@ public class MazeWindow extends BasicWindow {
 		maze.setImageString("resources/character.png");
 		maze.setImageGoalString("resources/win.png");
 		maze.setImageHintString("resources/banana.gif");
-		maze.setImageBackroundString("resources/blue.jpg");
-		maze.setImageWallString("resources/silver1.gif");
+		maze.setImageBackroundString("resources/brick.jpg");
+		maze.setImageWallString("resources/grey.jpg");
+		maze.setImageWayString("resources/silver2.png");
 
 		upButton.addKeyListener(key);
 	}
-
+/**
+ * This method sets a characters' position if it is possible
+ * @param x
+ * @param y
+ * @param z
+ */
 	public void setCharacterPosition(int x, int y, int z) {
 		if (x >= 0 && x < currentMaze.getX() && y >= 0 && y < currentMaze.getY() && z >= 0 && z < currentMaze.getZ()) {
 			if (currentMaze.getMaze3d()[x][y][z] == 0) {

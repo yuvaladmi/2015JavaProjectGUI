@@ -17,6 +17,7 @@ public abstract class abstractModel extends Observable implements Model {
 	public HashMap<String, Maze3d> hMaze;
 	public HashMap<String, Position> hPosition;
 	public HashMap<Maze3d, Solution<Position>> hSol;
+	protected Properties properties;
 
 	public abstract void dirToPath(String[] arr);
 

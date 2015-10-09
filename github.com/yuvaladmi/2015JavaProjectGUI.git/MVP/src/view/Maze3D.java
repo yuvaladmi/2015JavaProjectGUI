@@ -9,7 +9,12 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import algorithms.mazeGenerators.Position;
-
+/**
+ * 
+ * @author Yuval Admi & Afek Ben Simon
+ * This class paints a widget of a maze
+ *
+ */
 public class Maze3D extends Maze3dViewDisplayer {
 	public int characterX = 0;
 	public int characterY = 2;
@@ -31,7 +36,8 @@ public class Maze3D extends Maze3dViewDisplayer {
 
 			@Override
 			public void paintControl(PaintEvent e) {
-				e.gc.drawImage(imageBackround, 0, 0);
+				e.gc.setForeground(new Color(null,150,150,150));
+				e.gc.setBackground(new Color(null,150,150,150));
 				Stack<Position> stack = null;
 				if (solution != null) {
 					flag = 1;
@@ -40,8 +46,6 @@ public class Maze3D extends Maze3dViewDisplayer {
 				} else
 					flag = 0;
 				if (maze != null) {
-					// e.gc.setForeground(new Color(null, 0, 0, 0));
-					// e.gc.setBackground(new Color(null, 0, 0, 0));
 
 					Position temp = new Position(0, 0, 0);
 
@@ -118,8 +122,10 @@ public class Maze3D extends Maze3dViewDisplayer {
 							int x = j * w;
 							int y = i * h;
 							if (crossMaze[i][j] == 0)
-								e.gc.drawImage(new Image(getDisplay(), "resources/silver1.gif"), 0, 0,
-										imageWall.getBounds().width, imageWall.getBounds().height, x, y, w, h);
+								 e.gc.fillRectangle(x,y,w,h);
+							else{
+								e.gc.drawImage(imageWall, 0, 0,	imageWall.getBounds().width, imageWall.getBounds().height, x, y, w, h);
+							}
 							if (i == pos1 && j == pos2)
 								e.gc.drawImage(image, 0, 0, imageWidth, imageHeight, x, y, w, h);
 							if (i == goal1 && j == goal2 && index == goal3)

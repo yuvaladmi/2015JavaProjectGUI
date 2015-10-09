@@ -1,8 +1,6 @@
 package view;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -10,12 +8,21 @@ import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
 
+/**
+ * @author Yuval Admi & Afek Ben Simon
+ * @since 01.09.2015 This class is responsible to start the all system. It gets
+ *        a command, checks if it exists and sends an order to do it.
+ *
+ * 
+ */
 public class Maze3dViewCLI extends MyObservableCLIView {
 
 	public Maze3dViewCLI(BufferedReader in, PrintWriter out) {
 		super(in, out);
 	}
-
+	/**
+     * This method starts the whole project.
+     */
 	public void start() {
 
 		// the main thread, asking the client what does he want to do next.
@@ -41,32 +48,6 @@ public class Maze3dViewCLI extends MyObservableCLIView {
 		mainThread.start();
 	}
 
-	public void displayByte(byte[] arr) {
-		ByteArrayInputStream bArr = new ByteArrayInputStream(arr);
-		DataInputStream data = new DataInputStream(bArr);
-		try {
-			int x = data.readInt();
-			int y = data.readInt();
-			int z = data.readInt();
-			System.out.println("Start Position: " + data.readInt() + "," + data.readInt() + "," + data.readInt());
-			System.out.println("Goal Position: " + data.readInt() + "," + data.readInt() + "," + data.readInt());
-
-			System.out.println("Maze size: " + x + "," + y + "," + z);
-			System.out.println();
-			for (int i = 0; i < x; i++) {
-				for (int j = 0; j < y; j++) {
-					for (int k = 0; k < z; k++) {
-						System.out.print(data.read());
-					}
-					System.out.println();
-				}
-				System.out.println();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	@Override
 	public void displayString(String arr) {
 		System.out.println(arr);
@@ -89,11 +70,7 @@ public class Maze3dViewCLI extends MyObservableCLIView {
 		System.out.println("Server is safely closed");
 	}
 
-	@Override
-	public void notifyMessege(String[] arr) {
-		// TODO Auto-generated method stub
-
-	}
+	
 
 	@Override
 	public void displayMaze(Maze3d sendGame) {
@@ -109,6 +86,11 @@ public class Maze3dViewCLI extends MyObservableCLIView {
 	@Override
 	public void displaySolution(Solution<Position> s) {
 		System.out.println(s);
+	}
+	@Override
+	public void displayByte(byte[] arr) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

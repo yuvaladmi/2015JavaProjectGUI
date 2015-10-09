@@ -1,9 +1,19 @@
 package presenter;
 
 import java.io.Serializable;
-
+/**
+ * 
+ * @author Yuval Admi & Afek Ben Simon
+ * This class implements Serializable, has Getters & Setters to its parameters
+ *
+ */
 public class Properties implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	String name;
 	String solvingAlgo;
 	String viewStyle;

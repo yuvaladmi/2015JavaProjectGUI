@@ -13,8 +13,6 @@ public interface View {
 
 	public void displayInt(int[][] arr);
 
-	public void notifyMessege(String[] arr);
-
 	public void exit();
 
 	public void displayMaze(Maze3d sendGame);

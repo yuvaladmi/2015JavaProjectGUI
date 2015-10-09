@@ -17,13 +17,24 @@ import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
 import presenter.Properties;
 import properties.MessegeWindow;
-
+/**
+ * 
+ * @author Yuval Admi & Afek Ben Simon
+ * This class is responsible to start the project in a GUI mode
+ * */
 public class MyObservableGUIView extends MyAbstractObservableGuiView {
 
 	protected MazeWindow window;
-
+/**
+ * CTOR
+ * sets all the listeners
+ * @param title
+ * @param width
+ * @param height
+ */
 	public MyObservableGUIView(String title, int width, int height) {
 		window = new MazeWindow(title, width, height);
+		//Sets the selectionListener who responsible to generate the maze
 		window.setGenerateListener(new SelectionListener() {
 
 			@Override
@@ -36,6 +47,7 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 			}
 		});
+		//Sets the selectionListener who responsible to solve the maze
 		window.setSolveListener(new SelectionListener() {
 
 			@Override
@@ -50,6 +62,7 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 
 			}
 		});
+		//Sets the selectionListener who responsible to close the program
 		window.setExitListener(new SelectionListener() {
 
 			@Override
@@ -61,6 +74,7 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 			}
 		});
+		//Sets the selectionListener who responsible to the properties
 		window.setPropertiesListener(new SelectionListener() {
 
 			@Override
@@ -91,7 +105,7 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 			}
 		});
-
+		//Sets the selectionListener who responsible to save the mazes
 		window.setSaveListener(new SelectionListener() {
 
 			@Override
@@ -107,7 +121,7 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 
 			}
 		});
-
+		//Sets the selectionListener who responsible to load of mazes
 		window.setLoadListener(new SelectionListener() {
 
 			@Override
@@ -125,7 +139,7 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 
 			}
 		});
-
+		//Sets the disposeListener
 		window.setExitDispose(new DisposeListener() {
 
 			@Override
@@ -135,6 +149,7 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 
 			}
 		});
+		//Sets the keyListener who responsible to the movements of the characters
 		window.setKey(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
@@ -181,11 +196,7 @@ public class MyObservableGUIView extends MyAbstractObservableGuiView {
 		window.run();
 	}
 
-	@Override
-	public void notifyMessege(String[] arr) {
-		// TODO Auto-generated method stub
-
-	}
+	
 
 	@Override
 	public void displayByte(byte[] arr) {

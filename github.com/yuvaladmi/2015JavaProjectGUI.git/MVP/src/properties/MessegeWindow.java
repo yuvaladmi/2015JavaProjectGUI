@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -17,7 +19,13 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 
 import presenter.Properties;
-
+import view.BasicWindow;
+/**
+ * 
+ * @author Yuval Admi & Afek Ben Simon
+ * This class open a properties window
+ *
+ */
 public class MessegeWindow extends BasicWindow {
 
 	protected Properties properties;
@@ -72,6 +80,8 @@ public class MessegeWindow extends BasicWindow {
 
 		Button okButton = new Button(shell, SWT.PUSH);
 		okButton.setText("OK");
+		//This button saves all the data the user entered in a Properties parameter
+		//and in an XML file
 		okButton.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -80,25 +90,25 @@ public class MessegeWindow extends BasicWindow {
 				if ((Integer.parseInt(sizeX.getText()) % 2 != 0) && (Integer.parseInt(sizeX.getText()) >= 3)) {
 					properties.setSizeX(Integer.parseInt(sizeX.getText()));
 				} else {
-					displayError("Invalid 'x' value");
+					displayPopUp("Invalid 'x' value");
 					properties.setSizeX(7);
 				}
 				if ((Integer.parseInt(sizeY.getText()) % 2 != 0) && (Integer.parseInt(sizeY.getText()) >= 3)) {
 					properties.setSizeY(Integer.parseInt(sizeY.getText()));
 				} else {
-					displayError("Invalid 'y' value");
+					displayPopUp("Invalid 'y' value");
 					properties.setSizeY(7);
 				}
 				if ((Integer.parseInt(sizeZ.getText()) % 2 != 0) && (Integer.parseInt(sizeZ.getText()) >= 3)) {
 					properties.setSizeZ(Integer.parseInt(sizeZ.getText()));
 				} else {
-					displayError("Invalid 'z' value");
+					displayPopUp("Invalid 'z' value");
 					properties.setSizeZ(7);
 				}
 				if ((Integer.parseInt(numOfThreads.getText()) >= 1)) {
 					properties.setNumOfThreads(Integer.parseInt(numOfThreads.getText()));
 				} else {
-					displayError("Invalid number of threads value");
+					displayPopUp("Invalid number of threads value");
 					properties.setNumOfThreads(10);
 				}
 				properties.setPivot(pivot.getText().charAt(0));
@@ -123,14 +133,15 @@ public class MessegeWindow extends BasicWindow {
 
 			}
 		});
-
 	}
 
-	public void displayError(String str) {
+	@Override
+	public void displayPopUp(String str) {
 		MessageBox popUpWindow = new MessageBox(shell, SWT.ICON_INFORMATION);
 		popUpWindow.setText("ERROR!");
 		popUpWindow.setMessage(str);
 		popUpWindow.open();
+		
 	}
 
 }

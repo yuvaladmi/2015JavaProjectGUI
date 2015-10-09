@@ -8,20 +8,33 @@ import algorithms.mazeGenerators.Maze3d;
 import controller.Command;
 import model.Model;
 import view.View;
-
+/**
+ * 
+ * @author Yuval Admi & Afek Ben Simon
+ * @since 08.10.2015 This class implements Observer.
+ *        It should get a notification what we want to do from the View,
+ *        send it to the Model, wait for an answer and send to the View back.
+ *
+ */
 public class Presenter implements Observer {
 
 	View v;
 	Model m;
 	HashMap<String, Command> hCommands;
-
+/**
+ * CTOR
+ * @param m
+ * @param v
+ */
 	public Presenter(Model m, View v) {
 		this.v = v;
 		this.m = m;
 		this.hCommands = new HashMap<String, Command>();
 		createHashMap();
 	}
-
+	/**
+	 * This method create new Commands in the HashMap
+	 */
 	public void createHashMap() {
 		hCommands.put("generate", new Command() {
 
