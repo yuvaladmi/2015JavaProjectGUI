@@ -59,8 +59,6 @@ public class Run {
 		case "CLI":
 			view = new Maze3dViewCLI(new BufferedReader(new InputStreamReader(System.in)), new PrintWriter(System.out));
 			break;
-		default:
-			break;
 		}
 		Presenter p = new Presenter(m, view);
 		m.addObserver(p);

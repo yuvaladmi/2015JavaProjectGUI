@@ -5,25 +5,25 @@
    <string>n</string>
   </void>
   <void property="numOfThreads">
-   <int>2</int>
+   <int>7</int>
   </void>
   <void property="pivot">
    <char>x</char>
   </void>
   <void property="sizeX">
-   <int>21</int>
+   <int>7</int>
   </void>
   <void property="sizeY">
-   <int>21</int>
+   <int>7</int>
   </void>
   <void property="sizeZ">
-   <int>21</int>
+   <int>7</int>
   </void>
   <void property="solvingAlgo">
    <string>BFS</string>
   </void>
   <void property="viewStyle">
-   <string>GUI</string>
+   <string>CLI</string>
   </void>
  </object>
 </java>

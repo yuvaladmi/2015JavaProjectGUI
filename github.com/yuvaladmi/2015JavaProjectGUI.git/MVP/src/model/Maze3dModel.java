@@ -1,14 +1,18 @@
 package model;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -56,28 +60,33 @@ public class Maze3dModel extends abstractModel {
 		loadZip();
 	}
 
-	
 	@Override
 	public void generateMaze(String[] arr) {
 		int x = properties.getSizeX();
 		int y = properties.getSizeY();
 		int z = properties.getSizeZ();
 		String name = properties.getName();
-		System.out.println(x + " " + y + " " + z + " " + name);
 
-		Future<Maze3d> fCallMaze = threadpool.submit(new Callable<Maze3d>() {
-
-			@Override
-			public Maze3d call() throws Exception {
-				MyMaze3dGenerator mg = new MyMaze3dGenerator(x, y, z);
-				Maze3d m = mg.generate(x, y, z);
-				return m;
-			}
-		});
+		Socket theServer;
 		try {
-			hMaze.put(name, fCallMaze.get());
-			hPosition.put(name, fCallMaze.get().getStart());
-		} catch (InterruptedException | ExecutionException e) {
+			theServer = new Socket("localHost", 5400);
+			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
+			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
+			String temp;
+			temp = inFromServer.readLine();
+			outToServer.println("the name is: " + name);
+			outToServer.flush();
+			temp = inFromServer.readLine();
+			outToServer.println("the number of levels are: " + x);
+			outToServer.flush();
+			temp = inFromServer.readLine();
+			outToServer.println("the number of lines are: " + y);
+			outToServer.flush();
+			temp = inFromServer.readLine();
+			outToServer.println("the number of columns are: " + z);
+			outToServer.flush();
+
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -86,15 +95,32 @@ public class Maze3dModel extends abstractModel {
 		notifyObservers(messege);
 	}
 
-	
 	@Override
 	public Maze3d sendGame(String str) {
-		String name = str;
-		Maze3d temp = hMaze.get(name);
-		return temp;
+		Socket theServer;
+		try {
+			theServer = new Socket("localHost", 5400);
+			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
+			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
+			String temp;
+			temp = inFromServer.readLine();
+			outToServer.println("The maze name is: " + str);
+			outToServer.flush();
+			byte[] buffer = new byte[properties.getSizeX()*properties.getSizeY()*properties.getSizeZ() + 9];
+			byte b;
+			int i=-1;
+			while((b = (byte)inFromServer.read()) != 127){
+				buffer[++i] = b;
+			}
+			Maze3d maze = new Maze3d(buffer);
+			return maze;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 
-	
 	@Override
 	public int[][] crossSection(String[] arr) {
 		String name = properties.getName();
@@ -130,7 +156,6 @@ public class Maze3dModel extends abstractModel {
 
 	}
 
-	
 	@Override
 	public void save(String[] arr) {
 		String name = properties.getName();
@@ -151,7 +176,6 @@ public class Maze3dModel extends abstractModel {
 		}
 	}
 
-	
 	@Override
 	public void load(String[] arr) {
 		String name = arr[arr.length - 1];
@@ -181,45 +205,25 @@ public class Maze3dModel extends abstractModel {
 		}
 	}
 
-	
 	@Override
 	public void solve(String[] arr) {
 		String nameAlg = properties.getSolvingAlgo();
 		String name = properties.getName();
 		Maze3d tempMaze = hMaze.get(name);
-		if ((hSol.get(tempMaze)) != null) {
-			setChanged();
-			notifyObservers(("solution:" + name).split(":"));
-		}
-		Future<Solution<Position>> fCallSolution = threadpool.submit(new Callable<Solution<Position>>() {
-
-			@Override
-			public Solution<Position> call() throws Exception {
-
-				Maze3d m = hMaze.get(name);
-				SearchableMaze sMaze = new SearchableMaze(m);
-				CommonSearcher<Position> cs;
-				Solution<Position> s = new Solution<Position>();
-				switch (nameAlg) {
-				case "Astar":
-					cs = new AStar<Position>(new MazeManhattenDistance());
-					s = cs.search(sMaze);
-					break;
-				case "A*":
-					cs = new AStar<Position>(new MazeManhattenDistance());
-					s = cs.search(sMaze);
-					break;
-				case "BFS":
-					cs = new BFS<Position>();
-					s = cs.search(sMaze);
-					break;
-				}
-				return s;
-			}
-		});
+		Socket theServer;
 		try {
-			hSol.put(tempMaze, fCallSolution.get());
-		} catch (InterruptedException | ExecutionException e) {
+			theServer = new Socket("localHost", 5400);
+			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
+			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
+			String temp;
+			temp = inFromServer.readLine();
+			outToServer.println("the name is: " + name);
+			outToServer.flush();
+			temp = inFromServer.readLine();
+			outToServer.println("the algorithm name is: " + nameAlg);
+			outToServer.flush();
+
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -227,20 +231,28 @@ public class Maze3dModel extends abstractModel {
 		notifyObservers(("solution:" + name).split(":"));
 	}
 
-	
 	@Override
 	public Solution<Position> bringSolution() {
-		Maze3d maze = hMaze.get(properties.getName());
-		// Solution<Position> s = hSol.get(maze);
-		if (maze != null) {
-			Solution<Position> sol = hSol.get(maze);
-			return sol;
+		String name = properties.getName();
+		Socket theServer;
+		try {
+			theServer = new Socket("localHost", 5400);
+			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
+			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
+			String temp;
+			temp = inFromServer.readLine();
+			outToServer.println("The maze name is: " + name);
+			outToServer.flush();
+			String solution = inFromServer.readLine();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
 		}
-		notifyObservers("Solution do not exist for " + properties.getName() + " maze.");
-		return null;
+		
+		
 	}
 
-	
 	@Override
 	public void gameSize(String[] arr) {
 		Maze3d temp = hMaze.get(properties.getName());
@@ -254,7 +266,6 @@ public class Maze3dModel extends abstractModel {
 		}
 	}
 
-	
 	@Override
 	public void fileSize(String[] arr) {
 		File f = new File(arr[arr.length - 1]);
@@ -304,7 +315,6 @@ public class Maze3dModel extends abstractModel {
 		}
 	}
 
-	
 	@Override
 	public void close() {
 		saveZip();
@@ -330,7 +340,7 @@ public class Maze3dModel extends abstractModel {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	@Override
 	public void moveUp() {
 		String name = properties.getName();
