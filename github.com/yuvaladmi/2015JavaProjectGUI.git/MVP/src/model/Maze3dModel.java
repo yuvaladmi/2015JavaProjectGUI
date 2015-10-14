@@ -15,22 +15,13 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import algorithms.mazeGenerators.Maze3d;
-import algorithms.mazeGenerators.MyMaze3dGenerator;
 import algorithms.mazeGenerators.Position;
-import algorithms.search.AStar;
-import algorithms.search.BFS;
-import algorithms.search.CommonSearcher;
-import algorithms.search.MazeManhattenDistance;
-import algorithms.search.SearchableMaze;
 import algorithms.search.Solution;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
@@ -73,6 +64,8 @@ public class Maze3dModel extends abstractModel {
 			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
 			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
 			String temp;
+			outToServer.println("generate new maze");
+			outToServer.flush();
 			temp = inFromServer.readLine();
 			outToServer.println("the name is: " + name);
 			outToServer.flush();
@@ -103,6 +96,8 @@ public class Maze3dModel extends abstractModel {
 			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
 			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
 			String temp;
+			outToServer.println("get maze");
+			outToServer.flush();
 			temp = inFromServer.readLine();
 			outToServer.println("The maze name is: " + str);
 			outToServer.flush();
@@ -216,6 +211,8 @@ public class Maze3dModel extends abstractModel {
 			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
 			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
 			String temp;
+			outToServer.println("solve maze");
+			outToServer.flush();
 			temp = inFromServer.readLine();
 			outToServer.println("the name is: " + name);
 			outToServer.flush();
@@ -233,24 +230,24 @@ public class Maze3dModel extends abstractModel {
 
 	@Override
 	public Solution<Position> bringSolution() {
-		String name = properties.getName();
-		Socket theServer;
-		try {
-			theServer = new Socket("localHost", 5400);
-			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
-			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
-			String temp;
-			temp = inFromServer.readLine();
-			outToServer.println("The maze name is: " + name);
-			outToServer.flush();
-			String solution = inFromServer.readLine();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+//		String name = properties.getName();
+//		Socket theServer;
+//		try {
+//			theServer = new Socket("localHost", 5400);
+//			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
+//			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
+//			String temp;
+//			outToServer.println("send solution");
+//			outToServer.flush();
+//			temp = inFromServer.readLine();
+//			outToServer.println("The maze name is: " + name);
+//			outToServer.flush();
+//			String solution = inFromServer.readLine();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
 			return null;
-		}
-		
-		
+//		}
 	}
 
 	@Override
