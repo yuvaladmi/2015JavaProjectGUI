@@ -21,6 +21,27 @@ public class Properties implements Serializable {
 	int sizeX;
 	int sizeY;
 	int sizeZ;
+	int port;
+	String host;
+	
+	public Properties() {
+		this.port=5400;
+		this.host="127.0.0.1";
+	}
+	
+	public int getPort() {
+		return port;
+	}
+	
+	public void setPort(int port) {
+		this.port = port;
+	}
+	public String getHost() {
+		return host;
+	}
+	public void setHost(String host) {
+		this.host = host;
+	}
 	char pivot;
 	
 	public char getPivot() {

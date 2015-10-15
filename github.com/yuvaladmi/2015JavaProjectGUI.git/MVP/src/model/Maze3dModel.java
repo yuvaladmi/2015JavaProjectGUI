@@ -62,7 +62,7 @@ public class Maze3dModel extends abstractModel {
 
 		Socket theServer = null;
 		try {
-			theServer = new Socket("localHost", 5400);
+			theServer = new Socket(properties.getHost(), properties.getPort());
 			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
 			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
 			String temp;
@@ -109,7 +109,7 @@ public class Maze3dModel extends abstractModel {
 			return maze;
 		Socket theServer;
 		try {
-			theServer = new Socket("localHost", 5400);
+			theServer = new Socket(properties.getHost(), properties.getPort());
 			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
 			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
 			String temp;
@@ -233,7 +233,7 @@ public class Maze3dModel extends abstractModel {
 		Maze3d tempMaze = hMaze.get(name);
 		Socket theServer;
 		try {
-			theServer = new Socket("localHost", 5400);
+			theServer = new Socket(properties.getHost(), properties.getPort());
 			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
 			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
 			String temp;
@@ -272,7 +272,7 @@ public class Maze3dModel extends abstractModel {
 		Solution<Position> solution = new Solution<Position>();
 		Socket theServer;
 		try {
-			theServer = new Socket("localHost", 5400);
+			theServer = new Socket(properties.getHost(), properties.getPort());
 			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
 			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
 			String temp;
