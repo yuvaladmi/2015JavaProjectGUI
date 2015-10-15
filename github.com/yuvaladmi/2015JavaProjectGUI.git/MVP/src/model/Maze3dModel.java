@@ -13,8 +13,10 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
@@ -58,7 +60,7 @@ public class Maze3dModel extends abstractModel {
 		int z = properties.getSizeZ();
 		String name = properties.getName();
 
-		Socket theServer;
+		Socket theServer = null;
 		try {
 			theServer = new Socket("localHost", 5400);
 			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
@@ -66,30 +68,45 @@ public class Maze3dModel extends abstractModel {
 			String temp;
 			outToServer.println("generate new maze");
 			outToServer.flush();
+			System.out.println(inFromServer.readLine());// ok
 			temp = inFromServer.readLine();
 			outToServer.println("the name is: " + name);
 			outToServer.flush();
+			System.out.println("name: " + name);
 			temp = inFromServer.readLine();
 			outToServer.println("the number of levels are: " + x);
 			outToServer.flush();
+			System.out.println("x: " + x);
 			temp = inFromServer.readLine();
 			outToServer.println("the number of lines are: " + y);
 			outToServer.flush();
+			System.out.println("y: " + y);
 			temp = inFromServer.readLine();
 			outToServer.println("the number of columns are: " + z);
 			outToServer.flush();
+			System.out.println("z: " + z);
+			System.out.println(inFromServer.readLine());// done
+			outToServer.println("exit");
+			outToServer.flush();
+			inFromServer.close();
+			outToServer.close();
+			theServer.close();
+			String[] messege = ("maze is ready:" + name).split(":");
+			setChanged();
+			notifyObservers(messege);
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String[] messege = ("maze is ready:" + name).split(":");
-		setChanged();
-		notifyObservers(messege);
+
 	}
 
 	@Override
 	public Maze3d sendGame(String str) {
+		Maze3d maze;
+		if ((maze = hMaze.get(str)) != null)
+			return maze;
 		Socket theServer;
 		try {
 			theServer = new Socket("localHost", 5400);
@@ -98,16 +115,25 @@ public class Maze3dModel extends abstractModel {
 			String temp;
 			outToServer.println("get maze");
 			outToServer.flush();
+			System.out.println(inFromServer.readLine());// ok
 			temp = inFromServer.readLine();
-			outToServer.println("The maze name is: " + str);
+			System.out.println(temp);
+			outToServer.println(str);
 			outToServer.flush();
-			byte[] buffer = new byte[properties.getSizeX()*properties.getSizeY()*properties.getSizeZ() + 9];
+			byte[] buffer = new byte[(properties.getSizeX()*properties.getSizeY()*properties.getSizeZ())+36];
 			byte b;
-			int i=-1;
-			while((b = (byte)inFromServer.read()) != 127){
-				buffer[++i] = b;
+			int i = 0;
+			while ((b = (byte) inFromServer.read()) != 127) {
+				buffer[i++] = b;
 			}
-			Maze3d maze = new Maze3d(buffer);
+			maze = new Maze3d(buffer);
+			hMaze.put(str, maze);
+			hPosition.put(str, maze.getStart());
+			inFromServer.readLine();
+			outToServer.println("exit");
+			outToServer.close();
+			inFromServer.close();
+			theServer.close();
 			return maze;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -213,41 +239,70 @@ public class Maze3dModel extends abstractModel {
 			String temp;
 			outToServer.println("solve maze");
 			outToServer.flush();
+			System.out.println(inFromServer.readLine());// ok
 			temp = inFromServer.readLine();
+			System.out.println(temp);
 			outToServer.println("the name is: " + name);
 			outToServer.flush();
 			temp = inFromServer.readLine();
+			System.out.println(temp);
 			outToServer.println("the algorithm name is: " + nameAlg);
 			outToServer.flush();
-
+			System.out.println(nameAlg);
+			System.out.println(inFromServer.readLine());// done
+			outToServer.println("exit");
+			outToServer.flush();
+			inFromServer.close();
+			outToServer.close();
+			theServer.close();
+			setChanged();
+			notifyObservers(("solution:" + name).split(":"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		setChanged();
-		notifyObservers(("solution:" + name).split(":"));
 	}
 
 	@Override
 	public Solution<Position> bringSolution() {
-//		String name = properties.getName();
-//		Socket theServer;
-//		try {
-//			theServer = new Socket("localHost", 5400);
-//			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
-//			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
-//			String temp;
-//			outToServer.println("send solution");
-//			outToServer.flush();
-//			temp = inFromServer.readLine();
-//			outToServer.println("The maze name is: " + name);
-//			outToServer.flush();
-//			String solution = inFromServer.readLine();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
+		System.out.println("model solution");
+		int x,y,z;
+		String[] buffer;
+		String name = properties.getName();
+		Solution<Position> solution = new Solution<Position>();
+		Socket theServer;
+		try {
+			theServer = new Socket("localHost", 5400);
+			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
+			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
+			String temp;
+			outToServer.println("send solution");
+			outToServer.flush();
+			System.out.println(inFromServer.readLine());// ok
+			temp = inFromServer.readLine();
+			System.out.println(temp);
+			outToServer.println("The maze name is: " + name);
+			outToServer.flush();
+			while(!(temp = inFromServer.readLine()).equals("yuval")){
+				System.out.println(temp);
+				buffer = temp.split(",");
+				x = Integer.parseInt(buffer[0]);
+				y = Integer.parseInt(buffer[1]);
+				z = Integer.parseInt(buffer[2]);
+				solution.pushToStack(new Position(x,y,z));
+			}
+			System.out.println(inFromServer.readLine());// done
+			outToServer.println("exit");
+			outToServer.flush();
+			inFromServer.close();
+			outToServer.close();
+			theServer.close();
+			return solution;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			return null;
-//		}
+		}
 	}
 
 	@Override

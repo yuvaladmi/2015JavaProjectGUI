@@ -8,12 +8,13 @@ import algorithms.mazeGenerators.Maze3d;
 import controller.Command;
 import model.Model;
 import view.View;
+
 /**
  * 
  * @author Yuval Admi & Afek Ben Simon
- * @since 08.10.2015 This class implements Observer.
- *        It should get a notification what we want to do from the View,
- *        send it to the Model, wait for an answer and send to the View back.
+ * @since 08.10.2015 This class implements Observer. It should get a
+ *        notification what we want to do from the View, send it to the Model,
+ *        wait for an answer and send to the View back.
  *
  */
 public class Presenter implements Observer {
@@ -21,17 +22,20 @@ public class Presenter implements Observer {
 	View v;
 	Model m;
 	HashMap<String, Command> hCommands;
-/**
- * CTOR
- * @param m
- * @param v
- */
+
+	/**
+	 * CTOR
+	 * 
+	 * @param m
+	 * @param v
+	 */
 	public Presenter(Model m, View v) {
 		this.v = v;
 		this.m = m;
 		this.hCommands = new HashMap<String, Command>();
 		createHashMap();
 	}
+
 	/**
 	 * This method create new Commands in the HashMap
 	 */
@@ -53,7 +57,6 @@ public class Presenter implements Observer {
 					break;
 				case "solution":
 					v.displaySolution(m.bringSolution());
-					break;
 				default:
 					Maze3d maze = m.sendGame(arr[2]);
 					v.displayMaze(maze);
@@ -115,7 +118,7 @@ public class Presenter implements Observer {
 
 			}
 		});
-		
+
 		hCommands.put("move", new Command() {
 
 			@Override
@@ -155,10 +158,9 @@ public class Presenter implements Observer {
 				String[] s1 = (String[]) arg;
 				Command command = hCommands.get(s1[0]);
 				command.doCommand(s1);
-			}
-			else{
+			} else {
 				if (((arg.getClass()).getName()).equals("presenter.Properties")) {
-					Properties p= (Properties) arg;
+					Properties p = (Properties) arg;
 					m.setProperties(p);
 				}
 			}
