@@ -94,6 +94,7 @@ public class MazeWindow extends BasicWindow {
 
 	public void setCurrentMaze(Maze3d currentMaze) {
 		this.currentMaze = currentMaze;
+		solution = null;
 		widgetRefresh();
 	}
 
@@ -130,9 +131,11 @@ public class MazeWindow extends BasicWindow {
 	public void setSolveListener(SelectionListener solveKey) {
 		this.solveListener = solveKey;
 	}
-/**
- * This method checks which widget has changed and sets it in the display Class
- */
+
+	/**
+	 * This method checks which widget has changed and sets it in the display
+	 * Class
+	 */
 	private void widgetRefresh() {
 		for (Maze3dViewDisplayer display : mazeWidgetDisplayer) {
 			if (currentMaze != null)
@@ -145,6 +148,7 @@ public class MazeWindow extends BasicWindow {
 	}
 
 	@Override
+	
 	public void initWidgets() {
 		shell.setLayout(new GridLayout(3, false));
 		// shell.setBackgroundImage(new Image(display, "resources/red.jpg"));
@@ -235,12 +239,14 @@ public class MazeWindow extends BasicWindow {
 
 		upButton.addKeyListener(key);
 	}
-/**
- * This method sets a characters' position if it is possible
- * @param x
- * @param y
- * @param z
- */
+
+	/**
+	 * This method sets a characters' position if it is possible
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
 	public void setCharacterPosition(int x, int y, int z) {
 		if (x >= 0 && x < currentMaze.getX() && y >= 0 && y < currentMaze.getY() && z >= 0 && z < currentMaze.getZ()) {
 			if (currentMaze.getMaze3d()[x][y][z] == 0) {

@@ -62,6 +62,7 @@ public class Maze3dModel extends abstractModel {
 
 		Socket theServer = null;
 		try {
+			//open a new socket
 			theServer = new Socket(properties.getHost(), properties.getPort());
 			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
 			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
@@ -76,15 +77,12 @@ public class Maze3dModel extends abstractModel {
 			temp = inFromServer.readLine();
 			outToServer.println("the number of levels are: " + x);
 			outToServer.flush();
-			System.out.println("x: " + x);
 			temp = inFromServer.readLine();
 			outToServer.println("the number of lines are: " + y);
 			outToServer.flush();
-			System.out.println("y: " + y);
 			temp = inFromServer.readLine();
 			outToServer.println("the number of columns are: " + z);
 			outToServer.flush();
-			System.out.println("z: " + z);
 			System.out.println(inFromServer.readLine());// done
 			outToServer.println("exit");
 			outToServer.flush();
@@ -109,6 +107,7 @@ public class Maze3dModel extends abstractModel {
 			return maze;
 		Socket theServer;
 		try {
+			//open a new socket
 			theServer = new Socket(properties.getHost(), properties.getPort());
 			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
 			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
@@ -117,7 +116,6 @@ public class Maze3dModel extends abstractModel {
 			outToServer.flush();
 			System.out.println(inFromServer.readLine());// ok
 			temp = inFromServer.readLine();
-			System.out.println(temp);
 			outToServer.println(str);
 			outToServer.flush();
 			byte[] buffer = new byte[(properties.getSizeX()*properties.getSizeY()*properties.getSizeZ())+36];
@@ -233,6 +231,7 @@ public class Maze3dModel extends abstractModel {
 		Maze3d tempMaze = hMaze.get(name);
 		Socket theServer;
 		try {
+			//open a new socket
 			theServer = new Socket(properties.getHost(), properties.getPort());
 			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
 			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
@@ -241,14 +240,11 @@ public class Maze3dModel extends abstractModel {
 			outToServer.flush();
 			System.out.println(inFromServer.readLine());// ok
 			temp = inFromServer.readLine();
-			System.out.println(temp);
 			outToServer.println("the name is: " + name);
 			outToServer.flush();
 			temp = inFromServer.readLine();
-			System.out.println(temp);
 			outToServer.println("the algorithm name is: " + nameAlg);
 			outToServer.flush();
-			System.out.println(nameAlg);
 			System.out.println(inFromServer.readLine());// done
 			outToServer.println("exit");
 			outToServer.flush();
@@ -272,6 +268,7 @@ public class Maze3dModel extends abstractModel {
 		Solution<Position> solution = new Solution<Position>();
 		Socket theServer;
 		try {
+			//open a new socket
 			theServer = new Socket(properties.getHost(), properties.getPort());
 			PrintWriter outToServer = new PrintWriter(theServer.getOutputStream());
 			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(theServer.getInputStream()));
@@ -283,8 +280,7 @@ public class Maze3dModel extends abstractModel {
 			System.out.println(temp);
 			outToServer.println("The maze name is: " + name);
 			outToServer.flush();
-			while(!(temp = inFromServer.readLine()).equals("yuval")){
-				System.out.println(temp);
+			while(!(temp = inFromServer.readLine()).equals("-1")){
 				buffer = temp.split(",");
 				x = Integer.parseInt(buffer[0]);
 				y = Integer.parseInt(buffer[1]);
